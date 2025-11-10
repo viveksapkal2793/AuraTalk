@@ -17,13 +17,13 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Download REAL Linux x86_64 Vosk library from GitHub Release
-RUN curl -L \
-    -o /usr/local/lib/libvosk.so \
-    https://github.com/viveksapkal2793/AuraTalk/releases/download/vosk/libvosk.so
-
-# COPY ./deps/libvosk.so /usr/local/lib/libvosk.so
-RUN ls -lh /usr/local/lib && file /usr/local/lib/libvosk.so
-RUN ldconfig
+RUN curl -L -o /usr/local/lib/libvosk.so \
+        https://github.com/viveksapkal2793/AuraTalk/releases/download/vosk/libvosk.so \
+    && cp /usr/local/lib/libvosk.so /usr/lib/libvosk.so \
+    && mkdir -p /usr/lib/x86_64-linux-gnu \
+    && cp /usr/local/lib/libvosk.so /usr/lib/x86_64-linux-gnu/libvosk.so \
+    && ldconfig \
+    && ls -lh /usr/lib/libvosk.so /usr/lib/x86_64-linux-gnu/libvosk.so
 
 # Download model (instead of using your LFS folder)
 RUN mkdir -p /usr/src/app/model \
