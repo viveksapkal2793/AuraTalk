@@ -5,4 +5,4 @@ fly.toml
 .DS_Store
 target
 public
-deps
+# deps
