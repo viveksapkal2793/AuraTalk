@@ -5,8 +5,19 @@ RUN rm -rf .parcel-cache && rm -rf ./dist
 RUN npm install && npm run build:docker && cp -r ./lib ./dist
 
 FROM rust:latest as backend
+
+# Install required dependencies for Vosk linking
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libatlas-base-dev \
+    libstdc++6 \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY ./deps/libvosk.so /usr/local/lib/libvosk.so
 RUN ldconfig
+
+# Copy model files BEFORE cargo build
+COPY ./model /usr/src/app/model
 
 WORKDIR /usr/src/app
 COPY . .
