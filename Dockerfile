@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ./deps/libvosk.so /usr/local/lib/libvosk.so
+RUN ls -lh /usr/local/lib && file /usr/local/lib/libvosk.so
 RUN ldconfig
 
 # Copy model files BEFORE cargo build
