@@ -10,16 +10,29 @@ FROM rust:latest as backend
 RUN apt-get update && apt-get install -y \
     build-essential \
     gfortran \
+    curl \
     libstdc++6 \
     libgfortran5 \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
 
-COPY ./deps/libvosk.so /usr/local/lib/libvosk.so
+# Download REAL Linux x86_64 Vosk library from GitHub Release
+RUN curl -L \
+    -o /usr/local/lib/libvosk.so \
+    https://github.com/viveksapkal2793/AuraTalk/releases/download/vosk/libvosk.so
+
+# COPY ./deps/libvosk.so /usr/local/lib/libvosk.so
 RUN ls -lh /usr/local/lib && file /usr/local/lib/libvosk.so
 RUN ldconfig
 
+# Download model (instead of using your LFS folder)
+RUN curl -L -o model.zip \
+    https://github.com/viveksapkal2793/AuraTalk/releases/download/vosk_model/vosk-model-small-en-us-0.15.zip \
+    && unzip model.zip -d /usr/src/app/model \
+    && rm model.zip
+
 # Copy model files BEFORE cargo build
-COPY ./model /usr/src/app/model
+# COPY ./model /usr/src/app/model
 
 WORKDIR /usr/src/app
 COPY . .
