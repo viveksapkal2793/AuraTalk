@@ -1,4 +1,4 @@
-**Speech** is an online voice recorder that checks and helps you improve your pronunciation.
+**AuraTalk** is an online voice recorder that checks and helps you improve your pronunciation.
 
 Try it online at: https://speech.sege.dev
 
