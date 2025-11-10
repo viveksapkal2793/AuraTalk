@@ -26,8 +26,9 @@ RUN ls -lh /usr/local/lib && file /usr/local/lib/libvosk.so
 RUN ldconfig
 
 # Download model (instead of using your LFS folder)
-RUN curl -L -o model.zip \
-    https://github.com/viveksapkal2793/AuraTalk/releases/download/vosk_model/vosk-model-small-en-us-0.15.zip \
+RUN mkdir -p /usr/src/app/model \
+    && curl -L -o model.zip \
+        https://github.com/viveksapkal2793/AuraTalk/releases/download/vosk_model/vosk-model-small-en-us-0.15.zip \
     && unzip model.zip -d /usr/src/app/model \
     && rm model.zip
 
