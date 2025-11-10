@@ -6,9 +6,14 @@ RUN npm install && npm run build:docker && cp -r ./lib ./dist
 
 FROM rust:latest as backend
 COPY ./deps/libvosk.so /usr/local/lib/libvosk.so
+RUN ldconfig
 
 WORKDIR /usr/src/app
 COPY . .
+
+# Set library path for the linker
+ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
 # Will build and cache the binary and dependent crates in release mode
 # RUN --mount=type=cache,target=/usr/local/cargo,from=rust:latest,source=/usr/local/cargo \
 #     --mount=type=cache,target=target \
@@ -18,7 +23,15 @@ COPY . .
 RUN cargo build --release && mv ./target/release/speech-rs ./speech-rs
 
 # Runtime image
-FROM rust:latest
+# FROM rust:latest
+
+# Runtime image
+FROM debian:bookworm-slim
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 # Run as "app" user
 RUN useradd -ms /bin/bash app
