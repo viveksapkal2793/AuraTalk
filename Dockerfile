@@ -10,9 +10,12 @@ COPY ./deps/libvosk.so /usr/local/lib/libvosk.so
 WORKDIR /usr/src/app
 COPY . .
 # Will build and cache the binary and dependent crates in release mode
-RUN --mount=type=cache,target=/usr/local/cargo,from=rust:latest,source=/usr/local/cargo \
-    --mount=type=cache,target=target \
-    cargo build --release && mv ./target/release/speech-rs ./speech-rs
+# RUN --mount=type=cache,target=/usr/local/cargo,from=rust:latest,source=/usr/local/cargo \
+#     --mount=type=cache,target=target \
+#     cargo build --release && mv ./target/release/speech-rs ./speech-rs
+
+# Simplified build without cache mounts for Railway compatibility
+RUN cargo build --release && mv ./target/release/speech-rs ./speech-rs
 
 # Runtime image
 FROM rust:latest
