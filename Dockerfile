@@ -9,8 +9,9 @@ FROM rust:latest as backend
 # Install required dependencies for Vosk linking
 RUN apt-get update && apt-get install -y \
     build-essential \
-    libatlas-base-dev \
+    gfortran \
     libstdc++6 \
+    libgfortran5 \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ./deps/libvosk.so /usr/local/lib/libvosk.so
@@ -42,6 +43,8 @@ FROM debian:bookworm-slim
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y \
     ca-certificates \
+    libstdc++6 \
+    libgfortran5 \
     && rm -rf /var/lib/apt/lists/*
 
 # Run as "app" user
